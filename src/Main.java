@@ -26,18 +26,13 @@ class Container{
     }
 
     public String getFullSyntax(){
+        return state + "->" + syntax.substring(0, index) + "." + syntax.substring(index, syntax.length() );
+    }
 
-        if(index == 0){
-            return state + "->" + "." + syntax;
-        }
-        else if(index == syntax.length() - 1){
-            return state + "->" + syntax + ".";
-        }
-        else{
-            return state + "->" + syntax.substring(0, index - 1) + "." + syntax.substring(index - 1, syntax.length() );
-        }
-        //return syntax.substring(index - 1) + "." + syntax.substring(index, syntax.length() - 1);
-
+    @Override
+    public boolean equals(Object obj) {
+        Container c = (Container)obj;
+        return (this.state == c.state) && (this.syntax == c.syntax) && (this.index == c.index);
     }
 }
 
@@ -62,14 +57,12 @@ public class Main {
             e.printStackTrace();
         }
         c0();
-        for(ArrayList<Container> list : iZero){
-            System.out.print("I>");
-            for(Container iter : list){
-                System.out.print("[" + iter.getFullSyntax() + "]");
-            }
-            System.out.println();
+        try{
+            writeFile("output.txt");
         }
-
+        catch(IOException e){
+            e.printStackTrace();
+        }
     }
 
     public static void readFile(String file) throws IOException{
@@ -86,6 +79,23 @@ public class Main {
             }
             syntaxes.get(splitString[0]).add(splitString[1]);
         }
+        br.close();
+    }
+
+    public static void writeFile(String file) throws IOException{
+        BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+        int number = 0;
+        String str = new String();
+        for(ArrayList<Container> list : iZero){
+            str += "I" + number + ">";
+            for(Container iter : list){
+                str += "[" + iter.getFullSyntax() + "]";
+            }
+            bw.write(str);
+            bw.newLine();
+            str = new String();
+        }
+        bw.close();
     }
 
     public static void c0(){
@@ -97,13 +107,7 @@ public class Main {
                 iZero.get(0).add(new Container(key, value, 0));
             }
         }
-        int length;
-        int index = 0;
         i0(iZero.get(0));
-//        do{
-//            length = iZero.size();
-//            i0(iZero.get(index++));
-//        }while(iZero.size() != length);
     }
 
     public static void i0(ArrayList<Container> list){
@@ -131,29 +135,6 @@ public class Main {
                 i0(storage);
             }
         }
-//        for(Container c : list){
-//            if(!input.containsKey(state)){
-//                //add ararylist if this state is first time
-//                input.put(state, new ArrayList<>());
-//            }
-//            ArrayList<Container> temp = input.get(state);
-//            Container nextone = c.getNextOne();
-//            if(nextone != null){
-//                //check if string is ended
-//                ArrayList<Container> value = existOnIZero(nextone);
-//                if(value != null){
-//                    //add exist data
-//                    temp.addAll(value);
-//                }
-//                else{
-//                    //add next state
-//                    temp.add(nextone);
-//                }
-//            }
-//        }
-//        for(String str : input.keySet()){
-//            iZero.add(input.get(str));
-//        }
     }
 
     public static ArrayList<Container> existOnIZero(Container c){
@@ -164,13 +145,4 @@ public class Main {
         }
         return null;
     }
-
-    public static void i(String str){
-
-    }
-
-    public static void writeFile(String file){
-
-    }
-
 }
